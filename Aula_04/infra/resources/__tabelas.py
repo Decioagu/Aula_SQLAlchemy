@@ -1,0 +1,2 @@
+from resources.atores_repository import AtoresRepository
+from resources.filmes_repository import FilmesRepository
