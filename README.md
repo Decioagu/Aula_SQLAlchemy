@@ -117,3 +117,41 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
         - __tipo_embalagem.py__ = (modelo)
         - __tipo_picole.py__ = (modelo)
 ---
+
+**Aula_07**
+
+- Projeto: __Picoles__
+
+- __Resources__ (recursos): são recursos de acesso aos dados por meio de métodos, __regras de negocio__.
+
+- __INSERT__ é o comando utilizado para inserir registros em uma tabela já existente no seu banco de dados.
+
+- Arquivos:
+    - resources:
+        - __insert_01.py__ = (resources = Sem chave estrangeira)
+        - __insert_02.py__ = (resources = Com chave estrangeira)        
+        - __insert_03.py__ = (resources = Com chave estrangeira e tabela "secundaria")
+        - __insert_04.py__ = (resources = Com chave estrangeira e tabela "secundaria")   
+---
+
+**Aula_08**
+
+- Para usar o __SQLAlchemy de forma assíncrona__, você precisa usar sua versão com suporte assíncrono igual ou superior ao SQLAlchemy 1.4.
+
+- Para utilizar o SQLAlchemy de forma assíncrona com __SQLite__, é necessário instalar o driver __aiosqlite__, que permite que o SQLAlchemy funcione de maneira assíncrona com o __SQLite__: 
+    - __INSTALAÇÃO =>__ pip install aiosqlite
+    - __USO =>__ engine = create_async_engine("sqlite+aiosqlite:///nome_do_banco.db", echo=True)
+
+- Para utilizar o SQLAlchemy de forma assíncrona com __MySQL__, é necessário instalar o driver __aiomysql__, que permite que o SQLAlchemy funcione de maneira assíncrona com o __MySQL__:
+    - __INSTALAÇÃO =>__ pip install aiomysql
+    - __USO =>__ engine = create_async_engine("mysql+aiomysql://usuario:senha@localhost/nome_do_banco", echo=True)
+
+- Para utilizar o SQLAlchemy de forma assíncrona com  __PostgreSQL__, é necessário instalar o driver __asyncpg__, que permite que o SQLAlchemy funcione de maneira assíncrona com o  __PostgreSQL__:
+    - __INSTALAÇÃO =>__ pip install asyncpg
+    - __USO =>__ engine = create_async_engine("postgresql+asyncpg://usuario:senha@localhost:5432/nome_do_banco", echo=True)
+---
+
+**tqdm**
+- A biblioteca __tqdm__ em Python é usada para __criar barras de progresso em loops__, facilitando o acompanhamento __visual do andamento de processos__ demorados:
+    - __INSTALAÇÃO =>__ pip install asyncpg
+---

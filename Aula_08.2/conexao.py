@@ -1,9 +1,15 @@
 from sqlalchemy import create_engine, text, Column, String, Integer
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+from typing import Optional
+
+from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
+
+
 
 # endereço de conexão
-engine = create_engine('mysql://root:Enigma.3@localhost:3306/cinema_03') # mysqlclient
+# echo = True:  exibe no console todas as consultas SQL e outras operações que realiza
+engine = create_async_engine('mysql+aiomysql://root:Enigma.3@localhost:3306/cinema_03', echo=True) # mysqlclient
 BaseModel = declarative_base() # ORM do SQLAlchemy (classe)
 
 # Session: é a classe usada para gerar objetos de sessão
