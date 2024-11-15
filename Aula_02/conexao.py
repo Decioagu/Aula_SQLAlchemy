@@ -33,7 +33,7 @@ BaseModel.metadata.drop_all(engine) # apagar tabelas
 BaseModel.metadata.create_all(engine) # criar tabelas
 
 # CREATE
-inserir_dados = Filmes(titulo='AAA', genero='AAA', ano=2000) # modelar dados
+inserir_dados = Filmes(titulo='xxx', genero='AAA', ano=2000) # modelar dados
 session.add(inserir_dados) # ação de adicionar ao Banco de Dados "objetos de sessão"
 session.commit() # enviar para o Banco de Dados
 

@@ -5,9 +5,6 @@ from datetime import datetime
 from conf.model_base import ModelBase
 from models.tipo_picole import TipoPicole
 
-
-
-
 class Lote(ModelBase):
     __tablename__: str = 'lotes'
     id: int = Column(Integer, primary_key=True, autoincrement=True)

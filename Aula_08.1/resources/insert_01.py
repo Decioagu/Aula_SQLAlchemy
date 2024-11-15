@@ -1,5 +1,7 @@
 import sys
 import os
+import asyncio ### async
+from sqlalchemy.future import select ### async
 
 # Adicionar o caminho do diretório pai ao sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -17,35 +19,38 @@ from models.revendedor import Revendedor
 
 
 # 1 - AditivoNutritivo
-def insert_aditivo_nutritivo(nome=None, formula_quimica=None) -> None:
+async def insert_aditivo_nutritivo(nome=None, formula_quimica=None) -> None:
 
-    try:
-        # Se "nome" for "None"
-        if not nome:
-            return 'Faltou indicar o "nome" do AditivoNutritivo.'
-        # Se "formula_quimica" for "None"
-        if not formula_quimica:
-            return 'Faltou indicar o "formula_quimica" do AditivoNutritivo.'
-    
-        # dados = (ESCOPO BANCO DE DADOS)
-        dados = AditivoNutritivo(nome=nome, formula_quimica=formula_quimica)
-
-        with criar_session() as session:
+    async with criar_session() as session:
+        try:
+            # Se "nome" for "None"
+            if not nome:
+                return 'Faltou indicar o "nome" do AditivoNutritivo.'
+            # Se "formula_quimica" for "None"
+            if not formula_quimica:
+                return 'Faltou indicar o "formula_quimica" do AditivoNutritivo.'
+        
+            # dados = (ESCOPO BANCO DE DADOS)
+            dados = AditivoNutritivo(nome=nome, formula_quimica=formula_quimica)
+            
             # Verificar se o "nome" do AditivoNutritivo já existe
-            nome_ja_existe = session.query(AditivoNutritivo).filter(AditivoNutritivo.nome == nome).first()
+            nome_ja_existe = await session.execute(select(AditivoNutritivo).where(AditivoNutritivo.nome == nome))
+            resultado_nome = nome_ja_existe.scalars().all() ### async
 
             # Verificar se o "formula_quimica" do AditivoNutritivo já existe
-            formula_quimica_ja_existe = session.query(AditivoNutritivo).filter(AditivoNutritivo.formula_quimica == formula_quimica).first()
+            formula_quimica_ja_existe = await session.execute(select(AditivoNutritivo).where(AditivoNutritivo.formula_quimica == formula_quimica))
+            resultado_formula_quimica = formula_quimica_ja_existe.scalars().all() ### async
 
-            if nome_ja_existe:
+            if resultado_nome:
                 return f'Nome "{nome}" já esta cadastrado.'
-            if formula_quimica_ja_existe:
+            if resultado_formula_quimica:
                 return f'Formula quimica "{formula_quimica}" já esta cadastrado.'
             
             session.add(dados) # CONSULTA
-            session.commit() # CONSULTA
+            await session.commit() # CONSULTA
 
             exibir = (f'\n\
+            1 - AditivoNutritivo\n\
             id = {dados.id}\n\
             Data de criação = {dados.data_criacao}\n\
             Nome = {dados.nome}\n\
@@ -53,10 +58,10 @@ def insert_aditivo_nutritivo(nome=None, formula_quimica=None) -> None:
             
             return exibir
     
-    except Exception as exception:
-        # Reverte a transação caso haja erro
-        session.rollback() # CONSULTA
-        raise exception
+        except Exception as exception:
+            # Reverte a transação caso haja erro
+            await session.rollback() # CONSULTA
+            raise exception
 
 # <==========================================================>
 
@@ -301,30 +306,29 @@ def insert_revendedor(cnpj=None, razao_social=None, contato=None) -> None:
 # <==========================================================>
 
 if __name__ == '__main__':
-    resposta_01 =insert_aditivo_nutritivo(nome='x',formula_quimica='x')
-    print('1 - AditivoNutritivo')
+    resposta_01 = asyncio.run(insert_aditivo_nutritivo(nome='l',formula_quimica='l'))
     print(resposta_01)
 
-    resposta_02 =insert_sabor('x')
-    print('2 - Sabor')
-    print(resposta_02)
+    # resposta_02 =insert_sabor('x')
+    # print('2 - Sabor')
+    # print(resposta_02)
 
-    resposta_03 =insert_tipo_embalagem(nome='x')
-    print('3 - TipoEmbalagem')
-    print(resposta_03)
+    # resposta_03 =insert_tipo_embalagem(nome='x')
+    # print('3 - TipoEmbalagem')
+    # print(resposta_03)
 
-    resposta_04 =insert_tipo_picole(nome='x')
-    print('4 - TipoPicole')
-    print(resposta_04)
+    # resposta_04 =insert_tipo_picole(nome='x')
+    # print('4 - TipoPicole')
+    # print(resposta_04)
 
-    resposta_05 =insert_ingrediente(nome='x')
-    print('5 - Ingrediente')
-    print(resposta_05)
+    # resposta_05 =insert_ingrediente(nome='x')
+    # print('5 - Ingrediente')
+    # print(resposta_05)
 
-    resposta_06 =insert_conservante(nome='o',descricao='o')
-    print('6 - Conservante')
-    print(resposta_06)
+    # resposta_06 =insert_conservante(nome='o',descricao='o')
+    # print('6 - Conservante')
+    # print(resposta_06)
 
-    resposta_07 =insert_revendedor(cnpj='p',razao_social='p',contato='p')
-    print('7 - Revendedor')
-    print(resposta_07)
+    # resposta_07 =insert_revendedor(cnpj='p',razao_social='p',contato='p')
+    # print('7 - Revendedor')
+    # print(resposta_07)
