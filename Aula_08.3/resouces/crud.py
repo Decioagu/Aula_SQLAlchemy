@@ -1,53 +1,14 @@
 import asyncio ### async
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession ### async
 from sqlalchemy.future import select ### async
-
-from sqlalchemy import create_engine, text, Column, String, Integer
-from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
-from sqlalchemy import inspect
+import os
+import sys
+# Adicionar o caminho do diretório pai ao (sys.path)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# ============================================  ENDEREÇO DE CONEXÃO  ============================================
-# Primeiro, conectar ao servidor MySQL sem especificar um banco de dados
-engine = create_engine('mysql+mysqldb://root:Enigma.3@localhost:3306')
-
-# Criar o banco de dados "cinema" (CASO NÃO EXISTA)
-with engine.connect() as connection:
-    connection.execute(text("CREATE DATABASE IF NOT EXISTS cinema_03"))
-
-# echo = True:  exibe no console todas as consultas SQL e outras operações que realiza
-engine = create_async_engine('mysql+aiomysql://root:Enigma.3@localhost:3306/cinema_03', echo=False) ### async (mysqlclient)
-BaseModel = declarative_base() # ORM do SQLAlchemy (classe)
-
-# ===========================================  CONTROLE DE TRANSAÇÕES  ===========================================
-# Session: é a classe usada para gerar objetos de sessão
-Session = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False) ### async (interagir c/ banco de dados)
-session = Session() # interação (inserções, consultas, atualizações e exclusões)
-
-# ======================================  ORM (Object-Relational Mapping)  =======================================
-class Filmes(BaseModel):
-    __tablename__="filmes"
-
-    titulo = Column(String(25), primary_key=True)
-    genero = Column(String(25), nullable=False)
-    ano = Column(Integer, nullable=False)
-
-    # __repr__: representa a "classe Filmes" como uma "string"
-    def __repr__(self):
-        return f"Filme (titulo = {self.titulo}, gênero = {self.genero},ano = {self.ano})"
-
-# ======================================  CRIAR TABELA APOS MODELAGEM  =======================================
-# Função para verificar a existência de uma tabela em um contexto assíncrono
-async def tabela_existe(engine, nome_tabela: str) -> bool:
-    async with engine.connect() as conn:
-        # Usa run_sync para chamar o inspetor de forma síncrona
-        return await conn.run_sync(lambda sync_conn: inspect(sync_conn).has_table(nome_tabela))
-
-# cria a tabela após modelagem da classe "Filmes" (CASO NÃO EXISTA)
-async def criar_tables(engine):
-    async with engine.begin() as conn:
-        await conn.run_sync(BaseModel.metadata.create_all)
+from conf.conexao import Session, engine, tabela_existe, criar_tables ### sys.path
+from model.catalago import Filmes ### sys.path
 
 # ============================================  CRUD  ============================================
 # -------------------------------------------- CRIAR ---------------------------------------------

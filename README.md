@@ -134,7 +134,7 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
         - __insert_04.py__ = (resources = Com chave estrangeira e tabela "secundaria")   
 ---
 
-**Aula_08**
+**Aula_08.1, Aula_08.2 & Aula_08.3**
 
 - Para usar o __SQLAlchemy de forma assíncrona__, você precisa usar sua versão com suporte assíncrono igual ou superior ao SQLAlchemy 1.4.
 
@@ -154,4 +154,17 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 **tqdm**
 - A biblioteca __tqdm__ em Python é usada para __criar barras de progresso em loops__, facilitando o acompanhamento __visual do andamento de processos__ demorados:
     - __INSTALAÇÃO =>__ pip install asyncpg
+
+- OBS: em SQLalchemy assíncrono utilizar "__lazy='dynamic__" ao manipular lista.
+Exemplo: lotes: Mapped[__List__[Lote]] = relationship('Lote', 
+                                         secondary=lotes_nota_fiscal, 
+                                         backref='lote', 
+                                         __lazy='dynamic__')
 ---
+
+**Aula_09**
+
+__SQL Model__
+
+- O SQLModel é uma biblioteca Python que combina o poder do SQLAlchemy e do Pydantic para criar modelos de dados que funcionam bem tanto com bancos de dados relacionais quanto com validação de dados, baseado em type annotations do Python.
+- __pip install sqlmodel__

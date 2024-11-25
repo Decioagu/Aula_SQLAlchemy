@@ -1,6 +1,14 @@
-import asyncio
+import asyncio ### async
 from sqlalchemy.future import select ### async
-from conexao import Filmes, session, engine
+
+import os
+import sys
+# Adicionar o caminho do diretório pai ao (sys.path)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from conf.conexao import session, engine ### sys.path
+from model.catalago import Filmes ### sys.path
+
 
 # -------------------------------------------- LER --------------------------------------------
 # READ

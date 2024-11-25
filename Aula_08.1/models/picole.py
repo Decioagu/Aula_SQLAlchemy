@@ -56,14 +56,17 @@ class Picole(ModelBase):
     tipo_picole: Mapped[TipoPicole] = relationship('TipoPicole', lazy='joined') # Relacionamento
 
     # Um picole pode ter vários ingredientes (tabela "secundaria")
-    ingredientes: Mapped[List[Ingrediente]] = relationship('Ingrediente', secondary=ingredientes_picole, backref='ingrediente', lazy='joined')
+    ingredientes: Mapped[List[Ingrediente]] = relationship('Ingrediente', secondary=ingredientes_picole, backref='ingrediente', lazy='dynamic')
+    ''' OBS: em SQLalchemy assíncrono utilizar "lazy='dynamic" ao manipular lista'''
 
     # Um picolé pode ter vários conservantes ou mesmo nenhum (tabela "secundaria")
-    conservantes: Mapped[Optional[List[Conservante]]] = relationship('Conservante', secondary=conservantes_picole, backref='conservante', lazy='joined')
+    conservantes: Mapped[Optional[List[Conservante]]] = relationship('Conservante', secondary=conservantes_picole, backref='conservante', lazy='dynamic')
+    ''' OBS: em SQLalchemy assíncrono utilizar "lazy='dynamic" ao manipular lista'''
 
     # Um picole pode ter vários aditivos nutritivos ou mesmo nenhum (tabela "secundaria")
-    aditivos_nutritivos: Mapped[Optional[List[AditivoNutritivo]]] = relationship('AditivoNutritivo', secondary=aditivos_nutritivos_picole, backref='aditivo_nutritivo', lazy='joined')
-
+    aditivos_nutritivos: Mapped[Optional[List[AditivoNutritivo]]] = relationship('AditivoNutritivo', secondary=aditivos_nutritivos_picole, backref='aditivo_nutritivo', lazy='dynamic')
+    ''' OBS: em SQLalchemy assíncrono utilizar "lazy='dynamic" ao manipular lista'''
+    
     def __repr__(self) -> str:
         return f'<Picole: {self.tipo_picole.nome} com sabor {self.sabor.nome} e preço {self.preco}>'
 

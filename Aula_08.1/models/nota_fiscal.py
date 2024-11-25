@@ -33,6 +33,7 @@ class NotaFiscal(ModelBase):
 
     # Uma nota fiscal pode ter vários lotes e um lote está ligado a uma nota fiscal (tabela "secundaria")
     lotes: Mapped[List[Lote]] = relationship('Lote', secondary=lotes_nota_fiscal, backref='lote', lazy='dynamic')
+    ''' OBS: em SQLalchemy assíncrono utilizar "lazy='dynamic" ao manipular lista'''
 
     def __repr__(self) -> int:
         return f'<Nota Fiscal: {self.numero_serie}>'

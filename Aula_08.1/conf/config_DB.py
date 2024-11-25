@@ -14,11 +14,6 @@ from sqlalchemy.future import select ### async
 # ENDEREÇO DE CONEXÃO
 __async_engine: Optional[AsyncEngine] = None ### async
 
-def feche_async_engine():
-    engine = create_async_engine("mysql+aiomysql://root:Enigma.3@localhost:3306/picoles")
-    engine.dispose()
-
-
 # CONEXÃO (Função para configurar a conexão ao banco de dados)
 def criar_banco_de_dados(sqlite: bool = False) -> AsyncEngine: ### async
 

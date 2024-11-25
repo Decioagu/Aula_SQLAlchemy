@@ -40,6 +40,7 @@ def tabela_existe(engine, nome_tabela: str) -> bool:
 # Criar a tabela após modelagem da classe "Filmes" (CASO NÃO EXISTA)
 def criar_tabelas(engine):
     BaseModel.metadata.create_all(engine)
+    session.close()
 
 # ============================================  CRUD  ============================================
 # -------------------------------------------- CRIAR ---------------------------------------------
@@ -54,6 +55,7 @@ def post_filme(_titulo_: str ,_genero_: str ,_ano_: int):
 
         if titulo_ja_existe:
             print(f'Título "{_titulo_}" já esta cadastrado.')
+            session.close()
             return
 
         # Inserir no Banco de Dados
@@ -61,11 +63,13 @@ def post_filme(_titulo_: str ,_genero_: str ,_ano_: int):
         # Salvar
         session.commit()
         print(f"POST: Filme {_titulo_} inserido com sucesso!")
+        session.close()
         
     except SQLAlchemyError as e:
         print("POST:")
         print(f"Ocorreu um erro ao interagir com o banco de dados: {e}")
         session.rollback()  # Reverte a transação caso haja erro
+        session.close()
     
 # -------------------------------------------- LER --------------------------------------------
 # READ
@@ -76,6 +80,7 @@ def get_filmes_01():
     # acesso a lista do Banco de Dados
     for filme in busca_filme:
         print(filme) # __repr__
+        session.close()
 
 # -------------------------------------------- LER --------------------------------------------
 # READ
@@ -86,6 +91,7 @@ def get_filmes_02():
     # acesso a lista do Banco de Dados
     for filme in busca_filme:
         print(filme) # __repr__
+        session.close()
 
 # -------------------------------------------- LER --------------------------------------------
 # READ
@@ -97,6 +103,7 @@ def get_filmes_03():
     # acesso a lista do Banco de Dados
     print(busca_filme) # NÃO gera exceções se não encontra
     # print(busca_filme.ano) # gera exceções se não encontra
+    session.close()
 
 # -------------------------------------------- LER --------------------------------------------
 # READ
@@ -108,6 +115,7 @@ def get_filmes_04():
     # acesso a lista do Banco de Dados
     print(busca_filme) # gera exceções se não encontra
     # print(busca_filme.ano) # gera exceções se não encontra
+    session.close()
 
 # -------------------------------------------- LER --------------------------------------------
 # READ
@@ -120,6 +128,7 @@ def get_filmes_05():
     # acesso a lista do Banco de Dados
     print(busca_filme) # NÃO gera exceções se não encontra
     # print(busca_filme.ano) # gera exceções se não encontra
+    session.close()
 
 # -------------------------------------------- ATUALIZAR --------------------------------------------
 # UPDATE
@@ -136,8 +145,10 @@ def update_filme_01(filme_titulo: str, ano: int):
         """filter: sintaxe completa suporta (>,<,!=,==, etc)"""
         # Salvar
         session.commit()
+        session.close()
     else:
         print(f"UPDATE: Filme '{filme_titulo}' não encontrado para atualizar.")
+        session.close()
 
 # -------------------------------------------- ATUALIZAR --------------------------------------------
 # UPDATE
@@ -152,8 +163,10 @@ def update_filme_02(filme_titulo: str, ano: int):
         filme_existente.ano = ano
         # Salvar
         session.commit()
+        session.close()
     else:
         print(f"UPDATE: Filme '{filme_titulo}' não encontrado para atualizar.")
+        session.close()
     
 # -------------------------------------------- DELETAR --------------------------------------------
 # DELETE
@@ -166,9 +179,11 @@ def delete_filme(filme_titulo: str):
             print(f"DELETE: Filme '{filme_titulo}' deletado com sucesso!")
             
             session.delete(filme_existente) # Deletar o filme
-            session.commit()  # Confirmar a exclusão no banco de dados       
+            session.commit()  # Confirmar a exclusão no banco de dados   
+            session.close()    
     else:
         print(f"DELETE: Filme '{filme_titulo}' não encontrado para deletar.")
+        session.close()
 
 # ====================================================================================================
 
@@ -203,5 +218,3 @@ if __name__ == '__main__':
     get_filmes_04()
     print()
     get_filmes_05()
-
-    session.close() # fechar conexão

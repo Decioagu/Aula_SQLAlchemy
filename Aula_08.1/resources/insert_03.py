@@ -1,5 +1,7 @@
 import sys
 import os
+import asyncio ### async
+from sqlalchemy.future import select ### async
 
 # Adicionar o caminho do diretório pai ao sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -8,19 +10,19 @@ from conf.config_DB import criar_session # CONSULTA
 
 # ESCOPO BANCO DE DADOS
 from models.nota_fiscal import NotaFiscal # Recursos
+
 from models.revendedor import Revendedor # Chave estrangeira
 from models.lote import Lote # Chave estrangeira para (tabela "secundaria")
 
 # 9 - Nota Fiscal
-def insert_nota_fiscal() -> None:
+async def insert_nota_fiscal() -> None:
 
     try:
         
-        with criar_session() as session: 
+        async with criar_session() as session: 
             # ===================================================================
-            print('\n09 - Nota Fiscal\n')
             ### NotaFiscal ###
-            valor : float = input('Informe o valor da nota fiscal: ')
+            valor : float = (input('Informe o valor da nota fiscal: '))
 
             # Se "valor" não for informado
             if valor == '':
@@ -39,8 +41,9 @@ def insert_nota_fiscal() -> None:
             if numero_serie == '':
                 return 'Número de serie da nota fiscal não pode ficar em branco.'
 
-            pesquisa = session.query(NotaFiscal).filter(NotaFiscal.numero_serie == numero_serie).first()
-            
+            numero_serie_ja_existe = await session.execute(select(NotaFiscal).where(NotaFiscal.numero_serie == numero_serie))
+            pesquisa = numero_serie_ja_existe.scalars().all() ### async
+
             # Se "numero_serie" não for informado
             if pesquisa:
                 return 'Número de serie já foi cadastrado.'
@@ -66,7 +69,7 @@ def insert_nota_fiscal() -> None:
                 return "Valor inválido. Insira apenas valores numéricos."
             
             # Verificar se o "id_revendedor" já existe
-            revendedor = session.get(Revendedor, id_revendedor)
+            revendedor = await session.get(Revendedor, id_revendedor)
                 
             # Se o "revendedor" não existir
             if not revendedor:
@@ -78,6 +81,9 @@ def insert_nota_fiscal() -> None:
             session.add(dados) # CONSULTA
 
             # -----------------------------------------------------------------
+            # Auxilia na impressão de dados na variável "exibir"
+            lista_auxiliar = [] 
+
             cadastro = True
             ### Lote ###
             while cadastro:
@@ -95,7 +101,7 @@ def insert_nota_fiscal() -> None:
                     return "Valor inválido. Insira apenas valores numéricos."
                 
                 # Verificar se o "id_lote" já existe
-                lote = session.get(Lote, id_lote)
+                lote = await session.get(Lote, id_lote)
                     
                 # Se o "id_lote" não existir
                 if not lote:
@@ -114,11 +120,13 @@ def insert_nota_fiscal() -> None:
                         print(f'Digite [s] para CADASTRO ou [n] para SAIR.\n')
                 
                 dados.lotes.append(lote)
-                # -----------------------------------------------------------------
+                lista_auxiliar.append(lote) # Auxilia na impressão de dados
+            # -----------------------------------------------------------------
                 
             # ===================================================================
             session.add(dados) # CONSULTA
-            session.commit() # CONSULTA
+            await session.commit() # CONSULTA
+            await session.refresh(dados) # Atualiza o objeto "dados" na memória com os valores mais recentes do BANCO DE DADOS
             # ===================================================================
 
             exibir = (f'\n\
@@ -129,16 +137,19 @@ def insert_nota_fiscal() -> None:
             descrição = {dados.descricao}\n\
             id revendedor = {dados.revendedor.id}\n\
             CNPJ revendedor = {dados.revendedor.cnpj}\n\
-            lista lotes =   {[lote.id for lote in dados.lotes]}')
+            lista lotes =   {[lote.id for lote in lista_auxiliar]}')
             
             return exibir
     
     except Exception as exception:
         # Reverte a transação caso haja erro
-        session.rollback() # CONSULTA
+        await session.rollback() # CONSULTA
         raise exception
 
 if __name__ == '__main__':
 
-    resposta_09 = insert_nota_fiscal()
+    resposta_09 = asyncio.run(insert_nota_fiscal())
     print(resposta_09)
+    
+
+    

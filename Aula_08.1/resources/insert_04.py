@@ -1,5 +1,7 @@
 import sys
 import os
+import asyncio ### async
+from sqlalchemy.future import select ### async
 
 # Adicionar o caminho do diretório pai ao sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -18,11 +20,11 @@ from models.conservante import Conservante # Chave estrangeira para (tabela "sec
 from models.aditivo_nutritivo import AditivoNutritivo # Chave estrangeira para (tabela "secundaria")
 
 # 10 - Picole
-def insert_picole() -> None:
+async def insert_picole() -> None:
 
     try:
         
-        with criar_session() as session: 
+        async with criar_session() as session: 
             # ===================================================================
             print('\n10 - Picole\n')
             ### Picole ###
@@ -52,7 +54,7 @@ def insert_picole() -> None:
                 return "Valor inválido. Insira apenas valores numéricos."
             
             # Verificar se o "id_sabor" já existe
-            sabor = session.get(Sabor, id_sabor)
+            sabor = await session.get(Sabor, id_sabor)
                 
             # Se o "sabor" não existir
             if not sabor:
@@ -72,7 +74,7 @@ def insert_picole() -> None:
                 return "Valor inválido. Insira apenas valores numéricos."
             
             # Verificar se o "id_tipo_embalagem" já existe
-            tipo_embalagem = session.get(TipoEmbalagem, id_tipo_embalagem)
+            tipo_embalagem = await session.get(TipoEmbalagem, id_tipo_embalagem)
                 
             # Se o "tipo_embalagem" não existir
             if not tipo_embalagem:
@@ -93,7 +95,7 @@ def insert_picole() -> None:
                 return "Valor inválido. Insira apenas valores numéricos."
             
             # Verificar se o "id_tipo_picole" já existe
-            tipo_picole = session.get(TipoPicole, id_tipo_picole)
+            tipo_picole = await session.get(TipoPicole, id_tipo_picole)
                 
             # Se o "tipo_picole" não existir
             if not tipo_picole:
@@ -105,11 +107,19 @@ def insert_picole() -> None:
             session.add(dados) # CONSULTA
 
             # ===================================================================
+
+            # Auxilia na impressão de dados na variável "exibir"
+            lista_auxiliar_ingrediente = []
+
             cadastro = True
             ### Ingrediente ###
             while cadastro:
 
                 id_ingredientes: int = input('Informe o ID do ingrediente: ')
+
+                # Se "id_lote" não for informado
+                if id_ingredientes == '':
+                    return 'Informar ID de ingrediente é obrigatório.'
 
                 # Verifica se "id_ingredientes" pode ser convertido para int
                 try:
@@ -118,7 +128,7 @@ def insert_picole() -> None:
                     return "Valor inválido. Insira apenas valores numéricos."
                 
                 # Verificar se o "id_ingredientes" já existe
-                ingrediente = session.get(Ingrediente, id_ingredientes)
+                ingrediente = await session.get(Ingrediente, id_ingredientes)
                     
                 # Se o "id_ingredientes" não existir
                 if not ingrediente:
@@ -136,8 +146,14 @@ def insert_picole() -> None:
                         print(f'\nOpção invalida!')
                         print(f'Digite [s] para CADASTRO ou [n] para SAIR.\n')
                 
+                
                 dados.ingredientes.append(ingrediente)
+                lista_auxiliar_ingrediente.append(ingrediente.id) # Auxilia na impressão de dados
+
             # -----------------------------------------------------------------
+            # Auxilia na impressão de dados na variável "exibir"
+            lista_auxiliar_conservantes = []
+
             cadastro = True
             ### Conservante ###
             while cadastro:
@@ -157,11 +173,12 @@ def insert_picole() -> None:
                     return "Valor inválido. Insira apenas valores numéricos."
 
                 # Verificar se o "id_conservantes" já existe
-                conservante = session.get(Conservante, id_conservantes)
+                conservante = await session.get(Conservante, id_conservantes)
                     
                 # Se o "id_conservantes" existir
                 if conservante:
                     dados.conservantes.append(conservante)
+                    lista_auxiliar_conservantes.append(conservante.id) # Auxilia na impressão de dados
                 else:
                     print(f'\nConservante com id = "{id_conservantes}" não esta cadastrado.\n')
 
@@ -180,6 +197,9 @@ def insert_picole() -> None:
                         print(f'Digite [s] para CADASTRO ou [n] para SAIR.\n')
                 
             # -----------------------------------------------------------------
+            # Auxilia na impressão de dados na variável "exibir"
+            lista_auxiliar_aditivos_nutritivos = []
+
             cadastro = True
             ### AditivoNutritivo ###
             while cadastro:
@@ -199,11 +219,12 @@ def insert_picole() -> None:
                     return "Valor inválido. Insira apenas valores numéricos."
                 
                 # Verificar se o "id_aditivos_nutritivos" já existe
-                aditivos_nutritivo = session.get(AditivoNutritivo, id_aditivos_nutritivos)
+                aditivos_nutritivo = await session.get(AditivoNutritivo, id_aditivos_nutritivos)
                     
                 # Se o "id_aditivos_nutritivos" existir
                 if aditivos_nutritivo:
                     dados.aditivos_nutritivos.append(aditivos_nutritivo)
+                    lista_auxiliar_aditivos_nutritivos.append(aditivos_nutritivo.id) # Auxilia na impressão de dados
                 else:
                     print(f'\nAditivos nutritivos com id = "{id_aditivos_nutritivos}" não esta cadastrado.\n')
                 
@@ -218,25 +239,27 @@ def insert_picole() -> None:
                     else:
                         print(f'\nOpção invalida!')
                         print(f'Digite [s] para CADASTRO ou [n] para SAIR.\n')  
-                # -----------------------------------------------------------------
+
+            # -----------------------------------------------------------------
                 
             # ===================================================================    
             session.add(dados) # CONSULTA
-            session.commit() # CONSULTA
+            # await session.commit() # CONSULTA
+            await session.refresh(dados) # Atualiza o objeto "dados" na memória com os valores mais recentes do BANCO DE DADOS
             # ===================================================================
 
             exibir = (f'\n\
+            10 - Picole\n\
             id = {dados.id}\n\
             data_criacao = {dados.data_criacao}\n\
             preço = {dados.preco}\n\
             id_sabor = {dados.id_sabor}\n\
             id_tipo_embalagem = {dados.id_tipo_embalagem}\n\
             id_tipo_picole = {dados.id_tipo_picole}\n\
-            lista ingredientes = {[ingrediente.id for ingrediente in dados.ingredientes]}\n\
-            lista conservantes = {[conservante.id for conservante in dados.conservantes]}\n\
-            lista aditivos_nutritivos =   {[aditivos_nutritivo.id for aditivos_nutritivo in dados.aditivos_nutritivos]}')
+            lista ingredientes = {[ingrediente for ingrediente in lista_auxiliar_ingrediente]}\n\
+            lista conservantes = {[conservante for conservante in lista_auxiliar_conservantes]}\n\
+            lista aditivos_nutritivos =   {[aditivos_nutritivo for aditivos_nutritivo in lista_auxiliar_aditivos_nutritivos]}')
             
-             
             return exibir
     
     except Exception as exception:
@@ -246,7 +269,7 @@ def insert_picole() -> None:
 
 if __name__ == '__main__':
 
-    resposta_10 = insert_picole()
+    resposta_10 = asyncio.run(insert_picole())
     print(resposta_10)
 
 

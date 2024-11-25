@@ -1,5 +1,6 @@
 import sys
 import os
+from sqlmodel import select
 
 # Adicionar o caminho do diretório pai ao sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -15,7 +16,8 @@ def selecionar_aditivos_nutritivos():
     with criar_session() as session:
         
         # Consulta na tabela "aditivos_nutritivos"
-        dados = session.query(AditivoNutritivo).all()
+        filtro = select(AditivoNutritivo)
+        dados = session.exec(filtro).all()
         
         for aditivo in dados:
             print(aditivo) # __repr__

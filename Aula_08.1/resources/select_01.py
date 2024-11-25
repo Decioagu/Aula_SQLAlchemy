@@ -6,7 +6,7 @@ from sqlalchemy.future import select ### async
 # Adicionar o caminho do diretório pai ao sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from conf.config_DB import criar_session, feche_async_engine
+from conf.config_DB import criar_session, criar_banco_de_dados
 
 # ESCOPO BANCO DE DADOS
 from models.aditivo_nutritivo import AditivoNutritivo 
@@ -29,14 +29,12 @@ async def selecionar_aditivos_nutritivos():
 # Função para garantir o fechamento do loop
 if __name__ == '__main__':
 
-        # Função principal para gerenciar a execução
+    # Função principal para gerenciar a execução
     async def main():
         print()
         await  selecionar_aditivos_nutritivos()
-        await criar_session()
 
-    # # Executa o loop assíncrono
+    # Executa o loop assíncrono
     asyncio.run(main())
 
-print()
 
