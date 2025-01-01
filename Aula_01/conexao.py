@@ -18,8 +18,8 @@ from sqlalchemy import create_engine, text
 """
 
 # endereço Banco de Dados
-# engine = create_engine('mysql+pymysql://root:Enigma.3@localhost:3306/cinema') # pymysql
-engine = create_engine('mysql://root:Enigma.3@localhost:3306/cinema_01') # mysqlclient
+# engine = create_engine('mysql+pymysql://root:Enigma.1@localhost:3306/cinema') # pymysql
+engine = create_engine('mysql://root:Enigma.1@localhost:3306/cinema_01') # mysqlclient
 
 conn = engine.connect() # abrir conexão
 

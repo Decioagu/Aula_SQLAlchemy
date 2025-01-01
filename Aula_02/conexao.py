@@ -2,14 +2,14 @@ from sqlalchemy import create_engine, text, Column, String, Integer
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 # Primeiro, conectar ao servidor MySQL sem especificar um banco de dados
-engine = create_engine('mysql+mysqldb://root:Enigma.3@localhost:3306')
+engine = create_engine('mysql+mysqldb://root:Enigma.1@localhost:3306')
 
 # Criar o banco de dados "cinema" caso não exista
 with engine.connect() as connection:
     connection.execute(text("CREATE DATABASE IF NOT EXISTS cinema_02"))
 
 # Apontar para o banco de dados desejado
-engine = create_engine('mysql://root:Enigma.3@localhost:3306/cinema_02') # mysqlclient
+engine = create_engine('mysql://root:Enigma.1@localhost:3306/cinema_02') # mysqlclient
 BaseModel = declarative_base() # ORM do SQLAlchemy (classe)
 
 # Session: é a classe usada para gerar "objetos de sessão"
@@ -28,8 +28,8 @@ class Filmes(BaseModel):
         return f"Filme (titulo={self.titulo}, gênero={self.genero},ano={self.ano})" 
 
 # cria a tabela após modelagem da classe "Filmes"
-# BaseModel.metadata.drop_all(engine) # apagar tabelas
-# BaseModel.metadata.create_all(engine) # criar tabelas
+BaseModel.metadata.drop_all(engine) # apagar tabelas
+BaseModel.metadata.create_all(engine) # criar tabelas
 
 # CREATE
 inserir_dados = Filmes(titulo='AAA', genero='AAA', ano=2000) # modelar dados

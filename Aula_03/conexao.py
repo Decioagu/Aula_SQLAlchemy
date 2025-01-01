@@ -4,14 +4,14 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # ============================================  ENDEREÇO DE CONEXÃO  ============================================
 # Conectar ao servidor MySQL sem especificar um banco de dados
-engine = create_engine('mysql://root:Enigma.3@localhost:3306')
+engine = create_engine('mysql://root:Enigma.1@localhost:3306')
 
 # Criar o banco de dados "cinema_03" (CASO NÃO EXISTA)
 with engine.connect() as connection:
     connection.execute(text("CREATE DATABASE IF NOT EXISTS cinema_03"))
 
 # Conectar ao banco de dados recém-criado
-engine = create_engine('mysql://root:Enigma.3@localhost:3306/cinema_03', echo=False) # mysqlclient
+engine = create_engine('mysql://root:Enigma.1@localhost:3306/cinema_03', echo=False) # mysqlclient
 BaseModel = declarative_base() # ORM do SQLAlchemy (classe)
 
 # ===========================================  CONTROLE DE TRANSAÇÕES  ===========================================
