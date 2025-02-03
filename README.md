@@ -141,7 +141,6 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 - O __greenlet__ é uma biblioteca que permite a execução de corrotinas (funções assíncronas) sem bloquear a execução do código. Ele é fundamental para o SQLAlchemy quando se usa asyncio.
     - __INSTALAÇÃO =>__ pip install greenlet
 
-
 - Para utilizar o SQLAlchemy de forma assíncrona com __SQLite__, é necessário instalar o driver __aiosqlite__, que permite que o SQLAlchemy funcione de maneira assíncrona com o __SQLite__: 
     - __INSTALAÇÃO =>__ pip install aiosqlite
     - __USO =>__ engine = create_async_engine("sqlite+aiosqlite:///nome_do_banco.db", echo=True)
@@ -153,22 +152,32 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 - Para utilizar o SQLAlchemy de forma assíncrona com  __PostgreSQL__, é necessário instalar o driver __asyncpg__, que permite que o SQLAlchemy funcione de maneira assíncrona com o  __PostgreSQL__:
     - __INSTALAÇÃO =>__ pip install asyncpg
     - __USO =>__ engine = create_async_engine("postgresql+asyncpg://usuario:senha@localhost:5432/nome_do_banco", echo=True)
+
+- OBS: O argumento "echo=True" é um recurso de depuração e registro. Quando definido como True, o SQLAlchemy imprimirá todas as instruções SQL que ele executar no console (saída padrão).
 ---
 
-**tqdm**
-- A biblioteca __tqdm__ em Python é usada para __criar barras de progresso em loops__, facilitando o acompanhamento __visual do andamento de processos__ demorados:
-    - __INSTALAÇÃO =>__ pip install asyncpg
+**Aula_09_assicrono**
 
-- OBS: em SQLalchemy assíncrono utilizar "__lazy='dynamic__" ao manipular lista.
-Exemplo: lotes: Mapped[__List__[Lote]] = relationship('Lote', 
-                                         secondary=lotes_nota_fiscal, 
-                                         backref='lote', 
-                                         __lazy='dynamic__')
+- Exemplo assícrono do projeto: __Picoles__
+
+__SQLAlchemy de forma assíncrona__
 ---
 
-**Aula_09**
+**Aula_10 & Aula_11**
 
 __SQL Model__
 
-- O SQLModel é uma biblioteca Python que combina o poder do SQLAlchemy e do Pydantic para criar modelos de dados que funcionam bem tanto com bancos de dados relacionais quanto com validação de dados, baseado em type annotations do Python.
+- __SQLModel__ é uma biblioteca Python que facilita a interação com bancos de dados SQL, combinando o poder do Pydantic para validação de dados com a flexibilidade do SQLAlchemy para interagir com o banco de dados.
 - __pip install sqlmodel__
+---
+
+**Aula_12 & Aula_13**
+- Exemplo de uso da biblioteca __SQLModel__ de forma síncrona e assíncrona:
+- Síncrono: __crud_sync.py__
+- Assíncrona: __crud_async.py__
+---
+
+**Aula_tqdm**
+- A biblioteca __tqdm__ em Python é usada para __criar barras de progresso em loops__, facilitando o acompanhamento __visual do andamento de processos__ demorados:
+    - INSTALAÇÃO => pip install tqdm
+---

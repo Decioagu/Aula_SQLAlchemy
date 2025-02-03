@@ -1,10 +1,28 @@
-from sqlmodel import SQLModel, Field, Relationship, create_engine, Session
+from sqlmodel import SQLModel, Field, Relationship, create_engine, Session, text
 from typing import Optional, List
 
+from pathlib import Path 
+
+# ------------------------------ SQL --------------------------------
+# endereço da pasta atual
+caminho_do_arquivo = Path(__file__).parent # ver caminho do arquivo executado # ver caminho do arquivo executado
+nome_tabela = "teste_picoles.sqlite"
+# ----------------------------------------------------------------------
+
+
+# ------------------------------ MySQL --------------------------------
+# Primeiro, conectar ao servidor MySQL sem especificar um banco de dados
+engine = create_engine('mysql+mysqldb://root:Enigma.1@localhost:3306')
+
+# Criar o banco de dados "cinema" caso não exista
+with engine.connect() as connection:
+    connection.execute(text("CREATE DATABASE IF NOT EXISTS teste_11")) # Apontar para o banco de dados desejado
+# ----------------------------------------------------------------------
+
 # Configuração do banco de dados
-sqlite_url = ('sqlite:///teste_09.sqlite')
-# sqlite_url = ('mysql://root:Enigma.3@localhost:3306/teste')
-# sqlite_url = ('postgresql://Enigma.3:senha@localhost:5432/teste')
+sqlite_url = (f'sqlite:///{caminho_do_arquivo / nome_tabela}')
+# sqlite_url = ('mysql://root:Enigma.1@localhost:3306/teste_11')
+# sqlite_url = ('postgresql://Enigma.1:senha@localhost:5432/teste_11')
 
 engine = create_engine(sqlite_url)
 

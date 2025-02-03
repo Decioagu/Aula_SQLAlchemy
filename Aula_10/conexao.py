@@ -1,14 +1,14 @@
 from sqlmodel import SQLModel, Field, Session, create_engine, select, text
 
 # Primeiro, conectar ao servidor MySQL sem especificar um banco de dados
-# engine = create_engine('mysql+mysqldb://root:Enigma.3@localhost:3306')
+engine = create_engine('mysql+mysqldb://root:Enigma.1@localhost:3306')
 
 # Criar o banco de dados "cinema" caso não exista
-# with engine.connect() as connection:
-#     connection.execute(text("CREATE DATABASE IF NOT EXISTS cinema_09")) # Apontar para o banco de dados desejado
+with engine.connect() as connection:
+    connection.execute(text("CREATE DATABASE IF NOT EXISTS cinema_10")) # Apontar para o banco de dados desejado
 
 # Apontar para o banco de dados desejado
-engine = create_engine('mysql://root:Enigma.3@localhost:3306/cinema_09')
+engine = create_engine('mysql://root:Enigma.1@localhost:3306/cinema_10')
 # engine = create_engine('postgresql://Enigma.3:senha@localhost:5432/teste')
 
 # ORM (Object-Relational Mapping)
@@ -20,7 +20,7 @@ class Filmes(SQLModel, table=True):
 
 # cria a tabela após modelagem da classe "Filmes"
 # SQLModel.metadata.drop_all(engine) # apagar tabelas
-# SQLModel.metadata.create_all(engine) # criar tabelas
+SQLModel.metadata.create_all(engine) # criar tabelas
 
 # Criar uma instância de um filme
 novo_filme = Filmes(titulo="sss", ano=2001, genero="sss")
