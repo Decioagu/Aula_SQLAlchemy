@@ -4,7 +4,6 @@
 __SQLAlchemy__ é uma biblioteca de __ORM__ (__Object-Relational Mapping__) em Python que permite interagir com bancos de dados usando classes e objetos, abstraindo as consultas SQL complexas. Além de funcionar como ORM, SQLAlchemy também oferece ferramentas para executar consultas SQL diretamente. Ex: __text__.
 
 **Aula_01**
-
 __OBS: Banco de Dados gerado pelo arquivo BD_01.sql__
 
 - __create_engine__: é o ponto de entrada (conexão) para o SQLAlchemy quando se deseja se conectar a um banco de dados. Ela cria um "engine", que é a conexão entre o código Python e o banco de dados subjacente.
@@ -13,7 +12,6 @@ __OBS: Banco de Dados gerado pelo arquivo BD_01.sql__
 ---
 
 **Aula_02**
-
 - __engine__: é o ponto central para a __conexão__ entre o aplicativo Python e o banco de dados.
 
 - __ORM (Object-Relational Mapping)__: é uma técnica que permite que desenvolvedores interajam com bancos de dados relacionais de maneira mais simples e intuitiva, utilizando __objetos__ em vez de comandos SQL diretos.
@@ -30,7 +28,6 @@ __OBS: Banco de Dados gerado pelo arquivo BD_01.sql__
 ---
 
 **Aula_03**
-
 __OBS: Banco de Dados gerado pelo arquivo BD_03.sql__
 
 - Operações __(CRUD)__ em __SQLAlchemy__:
@@ -51,7 +48,6 @@ __OBS: Banco de Dados gerado pelo arquivo BD_03.sql__
 ---
 
 **Aula_04**
-
 - Projeto: __Catalogo de Cinema__
 
 __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
@@ -82,7 +78,6 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 ---
 
 **Aula_05**
-
 - Projeto: __Picoles__
 
 - Configuração de novo projeto utilizando __SQLAlchemy__ com __SQLite__ ou __MySQL__.
@@ -96,7 +91,6 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 ---
 
 **Aula_06**
-
 - Projeto: __Picoles__
 
 - __Models__ (modelos): gerencia e valida dados que transitam entre API e Banco de Dados, por meio de solicitação de usuário, permitindo apenas saída e entrada de dados definidos no modelo.
@@ -119,7 +113,6 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 ---
 
 **Aula_07**
-
 - Projeto: __Picoles__
 
 - __Resources__ (recursos): são recursos de acesso aos dados por meio de métodos, __regras de negocio__.
@@ -135,7 +128,6 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 ---
 
 **Aula_08.1 & Aula_08.2**
-
 - Para usar o __SQLAlchemy de forma assíncrona__, você precisa usar sua versão com suporte assíncrono igual ou superior ao SQLAlchemy 1.4.
 
 - O __greenlet__ é uma biblioteca que permite a execução de corrotinas (funções assíncronas) sem bloquear a execução do código. Ele é fundamental para o SQLAlchemy quando se usa asyncio.
@@ -157,14 +149,12 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 ---
 
 **Aula_09_assicrono**
-
 - Exemplo assícrono do projeto: __Picoles__
 
 __SQLAlchemy de forma assíncrona__
 ---
 
 **Aula_10 & Aula_11**
-
 __SQL Model__
 
 - __SQLModel__ é uma biblioteca Python que facilita a interação com bancos de dados SQL, combinando o poder do Pydantic para validação de dados com a flexibilidade do SQLAlchemy para interagir com o banco de dados.
