@@ -43,3 +43,5 @@ for linha in resposta:
 #     print(linha.ano)
 
 conn.close() # fechar conexão
+
+# Verificar se banco de dados cinema_01 exite: utilizar DB_01.sql

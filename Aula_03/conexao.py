@@ -218,3 +218,5 @@ if __name__ == '__main__':
     get_filmes_04()
     print()
     get_filmes_05()
+
+# Arquivo DB_03.sql auxilia na criação do banco de dados cinema_03

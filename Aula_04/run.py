@@ -36,4 +36,5 @@ print(resposta_06)
 resposta_07 = FilmesRepository().update(titulo="Predador", ano=1987)
 print(resposta_07)
 
+# Verificar  se banco de dados cinema_04 exite: utilizar DB_04.sql
 

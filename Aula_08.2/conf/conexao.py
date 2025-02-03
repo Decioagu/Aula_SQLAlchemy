@@ -7,14 +7,14 @@ from sqlalchemy import inspect # inspecionar tabela existente
 
 # ============================================  ENDEREÇO DE CONEXÃO  ============================================
 # Primeiro, conectar ao servidor MySQL sem especificar um banco de dados
-engine = create_engine('mysql+mysqldb://root:Enigma.3@localhost:3306')
+engine = create_engine('mysql+mysqldb://root:Enigma.1@localhost:3306')
 
 # Criar o banco de dados "cinema" (CASO NÃO EXISTA)
 with engine.connect() as connection:
     connection.execute(text("CREATE DATABASE IF NOT EXISTS cinema_03"))
 
 # echo = True:  exibe no console todas as consultas SQL e outras operações que realiza
-engine = create_async_engine('mysql+aiomysql://root:Enigma.3@localhost:3306/cinema_03', echo=False) ### async (mysqlclient)
+engine = create_async_engine('mysql+aiomysql://root:Enigma.1@localhost:3306/cinema_03', echo=False) ### async (mysqlclient)
 BaseModel = declarative_base() # ORM do SQLAlchemy (classe)
 
 # ===========================================  CONTROLE DE TRANSAÇÕES  ===========================================

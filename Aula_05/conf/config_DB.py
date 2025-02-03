@@ -29,19 +29,19 @@ def criar_banco_de_dados(sqlite: bool = False) -> Engine:
         caminho_do_arquivo = Path(__file__) # ver caminho do arquivo executado
         basedir = os.path.abspath(os.path.dirname(caminho_do_arquivo.parent))
 
-        conn_str = 'sqlite:///' + os.path.join(basedir, 'picoles.sqlite') # tipo de banco
+        conn_str = 'sqlite:///' + os.path.join(basedir, 'teste_picoles.sqlite') # tipo de banco
         __engine = banco.create_engine(url=conn_str, echo=False, connect_args={"check_same_thread": False})
     else:
         # Primeiro, conectar ao servidor MySQL sem especificar um banco de dados
-        engine =  banco.create_engine('mysql://root:Enigma.3@localhost:3306')
+        engine =  banco.create_engine('mysql://root:Enigma.1@localhost:3306')
 
-        # Criar o banco de dados "picoles" caso não exista
+        # Criar o banco de dados "teste_picoles" caso não exista
         with engine.connect() as connection:
             # "banco.text" permite execução de instruções SQL em sqlalchemy
-            connection.execute(banco.text("CREATE DATABASE IF NOT EXISTS picoles"))
+            connection.execute(banco.text("CREATE DATABASE IF NOT EXISTS teste_picoles"))
 
         # Apontar para o banco de dados desejado
-        conn_str = "mysql://root:Enigma.3@localhost:3306/picoles"
+        conn_str = "mysql://root:Enigma.1@localhost:3306/teste_picoles"
         __engine = banco.create_engine(url=conn_str, echo=False)
     
     return __engine
@@ -52,8 +52,8 @@ def criar_session() -> Session:
     global __engine # ENDEREÇO DE CONEXÃO
 
     if not __engine:
-        # criar_banco_de_dados() # MySQL
-        criar_banco_de_dados(sqlite=True) # SQLite
+        criar_banco_de_dados() # MySQL
+        # criar_banco_de_dados(sqlite=True) # SQLite
 
     __session = sessionmaker(__engine, expire_on_commit=False, class_=Session)
     session: Session = __session() # consulta ao banco de dados
@@ -67,15 +67,15 @@ def criar_tabelas() -> None:
 
     # Se "ENDEREÇO DE CONEXÃO" não existir
     if not __engine:
-        # criar_banco_de_dados() # MySQL
-        criar_banco_de_dados(sqlite=True) # SQLite
+        criar_banco_de_dados() # MySQL
+        # criar_banco_de_dados(sqlite=True) # SQLite
 
     # >>>>>>>>>> CRIAR TABELAS <<<<<<<<<<<
     class Picole(ModelBase):
         __tablename__="picoles"
-        nome = banco.Column(banco.String, primary_key=True)
-        sabor = banco.Column(banco.String, nullable=False)
+        nome = banco.Column(banco.String(100), primary_key=True)
+        sabor = banco.Column(banco.String(100), nullable=False)
 
-    ModelBase.metadata.drop_all(__engine) # apagar tabelas
+    # ModelBase.metadata.drop_all(__engine) # apagar tabelas
     ModelBase.metadata.create_all(__engine) # criar tabelas
     

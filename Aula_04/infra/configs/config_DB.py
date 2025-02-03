@@ -6,7 +6,7 @@ class Config_DB:
     # ==================================== CONEXÃO =====================================
     # endereço de conexão (construtor)
     def __init__(self) -> None:
-        self.__engine = create_engine ('mysql://root:Enigma.3@localhost:3306/cinema_04')
+        self.__engine = create_engine ('mysql://root:Enigma.1@localhost:3306/cinema_04')
         self.session = None
 
     # instanciar conexão

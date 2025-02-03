@@ -134,9 +134,13 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
         - __insert_04.py__ = (resources = Com chave estrangeira e tabela "secundaria")   
 ---
 
-**Aula_08.1, Aula_08.2 & Aula_08.3**
+**Aula_08.1 & Aula_08.2**
 
 - Para usar o __SQLAlchemy de forma assíncrona__, você precisa usar sua versão com suporte assíncrono igual ou superior ao SQLAlchemy 1.4.
+
+- O __greenlet__ é uma biblioteca que permite a execução de corrotinas (funções assíncronas) sem bloquear a execução do código. Ele é fundamental para o SQLAlchemy quando se usa asyncio.
+    - __INSTALAÇÃO =>__ pip install greenlet
+
 
 - Para utilizar o SQLAlchemy de forma assíncrona com __SQLite__, é necessário instalar o driver __aiosqlite__, que permite que o SQLAlchemy funcione de maneira assíncrona com o __SQLite__: 
     - __INSTALAÇÃO =>__ pip install aiosqlite

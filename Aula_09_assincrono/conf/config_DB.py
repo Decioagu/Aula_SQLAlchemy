@@ -15,7 +15,7 @@ from sqlalchemy.future import select ### async
 __async_engine: Optional[AsyncEngine] = None ### async
 
 # CONEXÃO (Função para configurar a conexão ao banco de dados)
-def criar_banco_de_dados(sqlite: bool = False) -> AsyncEngine: ### async
+async def criar_banco_de_dados(sqlite: bool = False) -> AsyncEngine: ### async
 
     global __async_engine ### async ENDEREÇO DE CONEXÃO
 
@@ -33,10 +33,10 @@ def criar_banco_de_dados(sqlite: bool = False) -> AsyncEngine: ### async
     else:
 
         # Apontar para o banco de dados desejado
-        conn_str = "mysql+aiomysql://root:Enigma.3@localhost:3306/picoles" ### async
+        conn_str = "mysql+aiomysql://root:Enigma.1@localhost:3306/picoles" ### async
         __async_engine = create_async_engine(url=conn_str, echo=False) ### async
     
-    return __async_engine ### async
+    return await __async_engine ### async
 
 # CONSULTA (Função para criar sessão, consulta ao banco de dados)
 def criar_session() -> AsyncSession:
@@ -44,7 +44,8 @@ def criar_session() -> AsyncSession:
     global __async_engine # ENDEREÇO DE CONEXÃO
 
     if not __async_engine: ### async
-        criar_banco_de_dados() # MySQL
+        # criar_banco_de_dados() # MySQL
+        criar_banco_de_dados(sqlite=True) # SQLite
 
     __async_session = sessionmaker(bind = __async_engine, expire_on_commit=False, class_= AsyncSession) ### async
     session: AsyncSession = __async_session() ### async (consulta ao banco de dados)
@@ -64,5 +65,5 @@ async def criar_tabelas() -> None: ### async
     # >>>>>>>>>> CRIAR TABELAS <<<<<<<<<<<
     import models.__all_models # MODELOS DE TABELAS
     async with __async_engine.begin() as conn: ### async
-        await conn.run_sync(ModelBase.metadata.drop_all) ### async (apagar tabelas)
+        # await conn.run_sync(ModelBase.metadata.drop_all) ### async (apagar tabelas)
         await conn.run_sync(ModelBase.metadata.create_all) ### async (criar tabelas)

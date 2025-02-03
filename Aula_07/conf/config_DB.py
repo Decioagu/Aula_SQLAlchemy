@@ -33,7 +33,7 @@ def criar_banco_de_dados(sqlite: bool = False) -> Engine:
         __engine = banco.create_engine(url=conn_str, echo=False, connect_args={"check_same_thread": False})
     else:
         # Primeiro, conectar ao servidor MySQL sem especificar um banco de dados
-        engine =  banco.create_engine('mysql://root:Enigma.3@localhost:3306')
+        engine =  banco.create_engine('mysql://root:Enigma.1@localhost:3306')
 
         # Criar o banco de dados "picoles" caso não exista
         with engine.connect() as connection:
@@ -41,7 +41,7 @@ def criar_banco_de_dados(sqlite: bool = False) -> Engine:
             connection.execute(banco.text("CREATE DATABASE IF NOT EXISTS picoles"))
 
         # Apontar para o banco de dados desejado
-        conn_str = "mysql://root:Enigma.3@localhost:3306/picoles"
+        conn_str = "mysql://root:Enigma.1@localhost:3306/picoles"
         __engine = banco.create_engine(url=conn_str, echo=False)
     
     return __engine
