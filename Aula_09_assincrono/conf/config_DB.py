@@ -17,6 +17,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engin
 from sqlalchemy.future import select ### async
 
 # ENDEREÇO DE CONEXÃO
+# AsyncEngine = tipagem (suportam drivers assíncronos)
 __async_engine: Optional[AsyncEngine] = None ### async
 
 # CONEXÃO (Função para configurar a conexão ao banco de dados)

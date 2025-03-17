@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, text, Column, String, Integer
+from sqlalchemy import create_engine, text, select, Column, String, Integer
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 # Primeiro, conectar ao servidor MySQL sem especificar um banco de dados
@@ -37,8 +37,14 @@ session.add(inserir_dados) # ação de adicionar ao Banco de Dados "objetos de s
 session.commit() # enviar para o Banco de Dados
 
 # READ
-busca_filme = session.query(Filmes).all() # ler dados
-for filme in busca_filme: # lista de Filmes
+busca_filme1 = session.query(Filmes).all() # ler dadosz
+for filme in busca_filme1: # lista de Filmes
+    print(filme)
+
+print()
+busca_filme2 =  select(Filmes)
+resultado = session.execute(busca_filme2)
+for filme in resultado: # lista de Filmes
     print(filme)
 
 session.close() # fechar conexão

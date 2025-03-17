@@ -19,7 +19,7 @@ BaseModel = declarative_base() # ORM do SQLAlchemy (classe)
 
 # ===========================================  CONTROLE DE TRANSAÇÕES  ===========================================
 # Session: é a classe usada para gerar objetos de sessão
-Session = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False) ### async (interagir c/ banco de dados)
+Session = sessionmaker(bind=engine, class_= AsyncSession, expire_on_commit=False) ### async (interagir c/ banco de dados)
 session = Session() # interação (inserções, consultas, atualizações e exclusões)
 
 # ======================================  CRIAR TABELA APOS MODELAGEM  =======================================

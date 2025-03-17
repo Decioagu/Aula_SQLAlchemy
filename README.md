@@ -165,6 +165,7 @@ __SQL Model__
 - Exemplo de uso da biblioteca __SQLModel__ de forma síncrona e assíncrona:
 - Síncrono: __crud_sync.py__
 - Assíncrona: __crud_async.py__
+    - OBS: Para realização de __"query"__ (requerimento) em funções assíncronas é necessário o uso do método __"select"__.
 ---
 
 **Aula_tqdm**

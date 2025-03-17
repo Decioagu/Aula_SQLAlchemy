@@ -9,7 +9,8 @@ import asyncio
 caminho = Path(__file__).parent
 nome_tabela = "picoles_assincrono.sqlite"
 DATABASE_URL = f"sqlite+aiosqlite:///{caminho / nome_tabela}"  # Usando SQLite assíncrono
-engine = create_async_engine(DATABASE_URL)
+# AsyncEngine = tipagem (suportam drivers assíncronos, não obrigatório)
+engine: AsyncEngine = create_async_engine(DATABASE_URL)
 
 # Definir a classe Picole
 class Picole(SQLModel, table=True):
@@ -33,12 +34,14 @@ async def criar_picole(nome: str, sabor: str):
 
 async def ler_picole(nome: str) -> Optional[Picole]:
     async with AsyncSession(engine) as session:
-        result = await session.exec(select(Picole).where(Picole.nome == nome))
+        query = select(Picole).filter(Picole.nome == nome)
+        result = await session.exec(query)
         return result.first()
 
 async def atualizar_picole(nome: str, novo_sabor: str) -> Optional[Picole]:
     async with AsyncSession(engine) as session:
-        result = await session.exec(select(Picole).where(Picole.nome == nome))
+        query = select(Picole).where(Picole.nome == nome)
+        result = await session.exec(query)
         picole = result.first()
         if picole:
             picole.sabor = novo_sabor
@@ -52,6 +55,7 @@ async def atualizar_picole(nome: str, novo_sabor: str) -> Optional[Picole]:
 async def deletar_picole(nome: str):
     async with AsyncSession(engine) as session:
         result = await session.exec(select(Picole).where(Picole.nome == nome))
+        # result = await session.exec(select(Picole).filter(Picole.nome == nome))
         picole = result.first()
         if picole:
             await session.delete(picole)
