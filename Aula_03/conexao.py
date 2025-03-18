@@ -12,6 +12,8 @@ with engine.connect() as connection:
 
 # Conectar ao banco de dados recém-criado
 engine = create_engine('mysql://root:Enigma.1@localhost:3306/cinema_03', echo=False) # mysqlclient
+
+# Modelagem do Banco de Dados
 BaseModel = declarative_base() # ORM do SQLAlchemy (classe)
 
 # ===========================================  CONTROLE DE TRANSAÇÕES  ===========================================

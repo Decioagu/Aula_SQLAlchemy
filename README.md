@@ -3,6 +3,8 @@
 
 __SQLAlchemy__ é uma biblioteca de __ORM__ (__Object-Relational Mapping__) em Python que permite interagir com bancos de dados usando classes e objetos, abstraindo as consultas SQL complexas. Além de funcionar como ORM, SQLAlchemy também oferece ferramentas para executar consultas SQL diretamente. Ex: __text__.
 
+__ORM (Object-Relational Mapping)__: é uma técnica que permite que desenvolvedores interajam com bancos de dados relacionais de maneira mais simples e intuitiva, utilizando __objetos__ em vez de comandos SQL diretos.
+
 **Aula_01**
 __OBS: Banco de Dados gerado pelo arquivo BD_01.sql__
 
@@ -12,19 +14,19 @@ __OBS: Banco de Dados gerado pelo arquivo BD_01.sql__
 ---
 
 **Aula_02**
-- __engine__: é o ponto central para a __conexão__ entre o aplicativo Python e o banco de dados.
+- __engine = create_engine()__: é o ponto central para a __conexão__ entre o aplicativo Python e o banco de dados.
 
-- __ORM (Object-Relational Mapping)__: é uma técnica que permite que desenvolvedores interajam com bancos de dados relacionais de maneira mais simples e intuitiva, utilizando __objetos__ em vez de comandos SQL diretos.
+- __BaseModel = declarative_base()__: é usada para criar uma classe base para criação de tabelas do Banco de Dados (MODELAGEM).
 
-- __Sessions__: interagem com o banco de dados usando o ORM, o SQLAlchemy utiliza o conceito de sessões. Uma sessão é responsável por operar __consulta__ no Banco de Dados.
+- __Session = sessionmaker(bind=engine)__: interagem com o banco de dados usando o ORM, o SQLAlchemy utiliza o conceito de sessões. Uma sessão é responsável por operar __consulta__ no Banco de Dados.
 
 - __BaseModel.metadata.create_all(engine)__:  cria todas as tabelas definidas em um modelo (class) de banco de dados a partir do objeto engine.
 - __BaseModel.metadata.drop_all(engine)__: é o método chamado para eliminar todas as tabelas que estão registradas no metadata da BaseModel.
 
-    - __BaseModel__: é uma classe que herda de "declarative_base()", que contem definições de tabelas e seus relacionamentos. Resumo: __declarative_base() = BaseModel__
+    - __BaseModel__: é uma classe que herda de "declarative_base()", que contem definições de tabelas e seus relacionamentos (Modelagem do Banco de Dados nas classes). 
     - __metadata__: Este é um atributo do BaseModel que contém informações sobre as tabelas que foram definidas nas classes.
     - __create_all(engine)__: cria todas as tabelas que estão registradas no metadata da BaseModel.
-    - drop_all(engine): eliminar todas as tabelas que estão registradas no metadata da BaseModel.
+    - __drop_all(engine)__: eliminar todas as tabelas que estão registradas no metadata da BaseModel.
 ---
 
 **Aula_03**
@@ -45,6 +47,17 @@ __OBS: Banco de Dados gerado pelo arquivo BD_03.sql__
     - <==========================================================>
     - SQL  - INSERT   |  SELECT      |  UPDATE     |  DELETE
     - =====> Inserir  |  Selecionar  |  Atualizar  |  Excluir
+
+- No CRUD __"session"__ é o método de comunicação entre aplicação e o Banco de Dados, segue principais métodos da __Session()__:
+
+    - __Session = sessionmaker(bind=engine)__ # (interagir c/ banco de dados)
+    - __session = Session()__ # interação (inserções, consultas, atualizações e exclusões)
+    
+    - __session.add(objeto)__: Adiciona um novo registro.
+    - __session.commit()__: Salva as mudanças no banco.
+    - __session.rollback()__: Desfaz alterações em caso de erro.
+    - __session.close()__: Fecha a sessão e libera recursos.
+    - __session.query(Modelo).filter_by(campo=valor).first()__: Busca registros.
 ---
 
 **Aula_04**

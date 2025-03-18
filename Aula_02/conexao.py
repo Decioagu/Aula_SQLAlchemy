@@ -10,6 +10,8 @@ with engine.connect() as connection:
 
 # Apontar para o banco de dados desejado
 engine = create_engine('mysql://root:Enigma.1@localhost:3306/cinema_02') # mysqlclient
+
+# Modelagem para Banco de Dados (class Filmes(BaseModel):)
 BaseModel = declarative_base() # ORM do SQLAlchemy (classe)
 
 # Session: é a classe usada para gerar "objetos de sessão"
