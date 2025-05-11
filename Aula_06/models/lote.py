@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from datetime import datetime
 from conf.model_base import ModelBase
@@ -12,6 +11,8 @@ class Lote(ModelBase):
     quantidade: int = Column(Integer, nullable=False)
 
     # Chave estrangeira e relacionamento
+    from sqlalchemy.orm import Mapped, mapped_column, relationship
+
     id_tipo_picole: Mapped[int] = mapped_column(Integer, ForeignKey('tipos_picole.id')) # chave estrangeira
     tipo_picole: Mapped[TipoPicole] = relationship('TipoPicole', lazy='joined') # Relacionamento
 
@@ -19,6 +20,8 @@ class Lote(ModelBase):
         return f'<Lote: {self.id}>'
 
 '''
+Declaração de tipo (Mapped[int]) em relacionamento.
+
 sqlalchemy.orm: Módulo que habilita o mapeamento objeto-relacional.
 Mapped: Tipo genérico para definir o tipo de dados mapeado para colunas.
 mapped_column: Função para criar colunas no banco de dados com atributos configuráveis.

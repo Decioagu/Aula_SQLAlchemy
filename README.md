@@ -108,11 +108,22 @@ __OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
 
 - __Models__ (modelos): gerencia e valida dados que transitam entre API e Banco de Dados, por meio de solicitação de usuário, permitindo apenas saída e entrada de dados definidos no modelo.
 
+- __Declaração de tipo ou CAMPO MAPEADO__:
+    - Em __SQLAlchemy__, o termo __CAMPO MAPEADO__ se refere a um atributo de uma classe que é mapeado para uma coluna em uma tabela do banco de dados.
+    Exp: id: __int__ = Column(Integer, primary_key=True, autoincrement=True)
+
+- Quando o objeto da classe possui __relacionamento__ em um __CAMPO MAPEADO__ é necessário indicar explicitamente que o campo é mapeado com __Mapped__, para garantir que o tipo do atributo. Essa anotação ajuda o SQLAlchemy a entender objetos relacionados na classe:
+    - __sqlalchemy.orm:__ Módulo que habilita o mapeamento objeto-relacional. 
+    - __Mapped__: Tipo genérico para definir o tipo de dados mapeado para colunas. 
+    - __mapped_column__: Função para criar colunas no banco de dados com atributos configuráveis.
+    - __relationship__: Define relações entre tabelas (como um-para-muitos, muitos-para-muitos).
+        - Exemplo: __lote.py__
+
 - Arquivos:
     - conf:
         - __config_DB.py__ = configuração Banco de Dados em __SQLAlchemy__
     - models:
-        - __all-models.py = responsável por aglutinar e instanciar todos os modelos
+        - __all-models.py__ = responsável por aglutinar e instanciar todos os modelos
         - __aditivo_nutritivo.py__ = (modelo)
         - __conservante.py__ = (modelo)
         - __ingrediente.py__ = (modelo)
