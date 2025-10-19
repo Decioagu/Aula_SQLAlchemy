@@ -6,7 +6,7 @@ __SQLAlchemy__ é uma biblioteca de __ORM__ (__Object-Relational Mapping__) em P
 __ORM (Object-Relational Mapping)__: é uma técnica que permite que desenvolvedores interajam com bancos de dados relacionais de maneira mais simples e intuitiva, utilizando __objetos__ em vez de comandos SQL diretos.
 
 **Aula_01**
-__OBS: Banco de Dados gerado pelo arquivo BD_01.sql__
+__OBS: Gerar Banco de Dados pelo arquivo BD_01.sql__
 
 - __create_engine__: é o ponto de entrada (conexão) para o SQLAlchemy quando se deseja se conectar a um banco de dados. Ela cria um "engine", que é a conexão entre o código Python e o banco de dados subjacente.
 
@@ -30,13 +30,15 @@ __OBS: Banco de Dados gerado pelo arquivo BD_01.sql__
 ---
 
 **Aula_03**
-__OBS: Banco de Dados gerado pelo arquivo BD_03.sql__
+__OBS: Gerar Banco de Dados pelo arquivo BD_03.sql__
 
 - Operações __(CRUD)__ em __SQLAlchemy__:
     - __CREATE (Criar)__: Insere novos registros em uma tabela do banco de dados.
     - __READ (Ler)__: Recupera dados existentes na tabela, podendo filtrar por critérios específicos.
     - __UPDATE (Atualizar)__: Modifica o conteúdo de registros já existentes.
     - __DELETE (Excluir)__: Remove registros da tabela.
+
+- O CRUD é o fundamento da persistência de dados, toda aplicação que **cria**, **lê**, **atualiza** ou **exclui** informações (em um BANCO DE DADOS ou API) está implementando é um CRUD.
 
 - __CRUD__:
     - CRUD - CREATE   |  READ        |  UPDATE     |  DELETE
@@ -63,7 +65,7 @@ __OBS: Banco de Dados gerado pelo arquivo BD_03.sql__
 **Aula_04**
 - Projeto: __Catalogo de Cinema__
 
-__OBS: Banco de Dados gerado pelo arquivo BD_04.sql__
+__OBS: Gerar Banco de Dados pelo arquivo BD_04.sql__
 
 - __Models__ (modelos): gerencia e valida dados que transitam entre API e Banco de Dados, por meio de solicitação de usuário, permitindo apenas saída e entrada de dados definidos no modelo.
 
