@@ -194,6 +194,12 @@ __SQL Model__
     - OBS: Para realização de __"query"__ (requerimento) em funções assíncronas é necessário o uso do método __"select"__.
 ---
 
+**Aula_14**
+- Entender a diferença entre ForeignKey e relationship
+- Declaração de tipo ou mapeamento (Mapped)
+- Relacionamentos (1:N e N:N)
+- LINK: [Entender a diferença entre ForeignKey, relationship e declaração de tipo (Mapped)](Aula_14/mapped.md)
+
 **Aula_tqdm**
 - A biblioteca __tqdm__ em Python é usada para __criar barras de progresso em loops__, facilitando o acompanhamento __visual do andamento de processos__ demorados:
     - INSTALAÇÃO => pip install tqdm
