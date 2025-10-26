@@ -6,7 +6,7 @@ from pathlib import Path
 # ------------------------------ SQL --------------------------------
 # endereço da pasta atual
 caminho_do_arquivo = Path(__file__).parent # ver caminho do arquivo executado # ver caminho do arquivo executado
-nome_tabela = "teste_picoles.sqlite"
+nome_banco = "teste_11.sqlite"
 # ----------------------------------------------------------------------
 
 
@@ -20,7 +20,7 @@ with engine.connect() as connection:
 # ----------------------------------------------------------------------
 
 # Configuração do banco de dados
-sqlite_url = (f'sqlite:///{caminho_do_arquivo / nome_tabela}')
+sqlite_url = (f'sqlite:///{caminho_do_arquivo / nome_banco}')
 # sqlite_url = ('mysql://root:Enigma.1@localhost:3306/teste_11')
 # sqlite_url = ('postgresql://Enigma.1:senha@localhost:5432/teste_11')
 

@@ -4,7 +4,7 @@
     - Exp: id: __int__ = Column(Integer, primary_key=True, autoincrement=True)
 
 - Quando o objeto da classe possui __relacionamento__ em um __CAMPO MAPEADO__ é necessário indicar explicitamente que o campo é mapeado com __Mapped__, para garantir que o tipo do atributo. Essa anotação ajuda o SQLAlchemy a entender objetos relacionados na classe.
-
+v
 ---
 <br>
 
@@ -116,9 +116,9 @@ class Postagem(Base):
     autor: Mapped["Usuario"] = relationship(back_populates="postagens")
 ```
 
-![alt text](<../Aula_14/Captura de tela 2025-10-23 171126.png>)
+![alt text](IMAGENS/01_Resumo_Mapped.png)
 
-![alt text](<../Aula_14/Captura de tela 2025-10-23 171156.png>)
+![alt text](IMAGENS/02_Dicas_Mapped.png)
 
 ---
 <br >
@@ -199,73 +199,106 @@ class Pedido(Base):
 ### Em resumo:
 - relationship = vínculo no ORM (Python), não no banco.
 
-![alt text](<../Aula_14/Captura de tela 2025-10-23 173443.png>)
+![alt text](IMAGENS/03_ForeigKey_VS_relationship.png)
 
-### Uso pratico de relationship JOIN automático:
+![alt text](IMAGENS/04_uso_de_relationship.png)
+
+![alt text](IMAGENS/05_resumo.png)
+
+
+### Uso pratico de relationship JOIN automático e manual:
 
 ````
-from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
+from sqlalchemy import Column, Integer, String
+from sqlalchemy import ForeignKey, create_engine, select
 from sqlalchemy.orm import declarative_base, relationship, Session
 
-Base = declarative_base()
+# ======================
+# CONEXÃO AO BANCO
+# ======================
+engine = create_engine("sqlite:///:memory:")
 
-class Usuario(Base):
+# ======================
+# BANCO E SESSÃO
+# ======================
+session = Session(engine)
+
+# ======================
+# MODELAGEM DO BANCO
+# ======================
+BaseModel = declarative_base()
+
+class Usuario(BaseModel):
     __tablename__ = "usuarios"
 
     id = Column(Integer, primary_key=True)
     nome = Column(String, nullable=False)
 
+    # Relacionamento 1:N (um usuário tem vários pedidos)
     pedidos = relationship("Pedido", back_populates="usuario")
 
-class Pedido(Base):
+class Pedido(BaseModel):
     __tablename__ = "pedidos"
 
     id = Column(Integer, primary_key=True)
     descricao = Column(String)
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
+    usuario_id = Column(ForeignKey("usuarios.id"))
+
+    # Lado oposto do relacionamento
     usuario = relationship("Usuario", back_populates="pedidos")
 
+# ======================
+# CRIANDO AS TABELAS
+# ======================
+BaseModel.metadata.create_all(engine)
 
-# Cria o banco em memória e as tabelas
-engine = create_engine("sqlite:///:memory:")
-Base.metadata.create_all(engine)
-
-# Cria uma sessão
-session = Session(engine)
-
-# Cria usuário e pedidos
+# ======================
+# INSERÇÃO DE DADOS
+# ======================
 u1 = Usuario(nome="Alice")
 p1 = Pedido(descricao="Pedido A", usuario=u1)
 p2 = Pedido(descricao="Pedido B", usuario=u1)
 
 session.add_all([u1, p1, p2])
 session.commit()
+
+# ======================
+# CONSULTA JOIN AUTOMÁTICA
+# ======================
+# Agora não precisamos mais informar a condição do join:
+consulta_automatica = select(Usuario.nome, Pedido.descricao).join(Usuario.pedidos)
+
+result = session.execute(consulta_automatica).all()
+print(result)  # [('Alice', 'Pedido A'), ('Alice', 'Pedido B')]
+
+# ======================
+# CONSULTA JOIN MANUAL (explícita)
+# ======================
+consulta_manual = (select(Usuario.nome, Pedido.descricao).join(Pedido, Pedido.usuario_id == Usuario.id))
+
+result = session.execute(consulta_manual).all()
+print(result)  # [('Alice', 'Pedido A'), ('Alice', 'Pedido B')]
+
+session.close()
 ````
 
-### Sem relationship (JOIN manual):
+Dica de Criação de uma Sessão:
 
-````
-from sqlalchemy import select, join
+Conclusão
 
-stmt = select(Usuario.nome, Pedido.descricao).join(Pedido, Pedido.usuario_id == Usuario.id)
-result = session.execute(stmt).all()
-print(result)
-````
+🔹 Se você está estudando ou fazendo scripts pequenos:
+→ Use Session(engine) — simples, claro e suficiente.
 
-### SQL gerado:
-````
-SELECT usuarios.nome, pedidos.descricao
-FROM usuarios
-JOIN pedidos ON pedidos.usuario_id = usuarios.id
-````
-### Resultado:
-- [('Alice', 'Pedido A'), ('Alice', 'Pedido B')]
+🔹 Se você está construindo uma aplicação maior (como uma API FastAPI ou Flask):
+→ Use sessionmaker — mais organizado e escalável.
+
+![alt text](IMAGENS/06_Dicas_Sessao.png)
 
 ### Conclusão:
 
-- relationship não cria JOINs no banco — mas quando você acessa um atributo relacionado (usuario.pedidos ou pedido.usuario), o SQLAlchemy gera automaticamente uma query com JOINs ou SELECTs para carregar esses dados.
+- relationship não cria JOINs no banco, mas quando você acessa um atributo relacionado (usuario.pedidos ou pedido.usuario), o SQLAlchemy gera automaticamente uma query com JOINs ou SELECTs para carregar esses dados.
 
-![alt text](<../Aula_14/Captura de tela 2025-10-23 192537.png>)
+![alt text](IMAGENS/07_JOIN.png)
 
 ---
 ---
@@ -274,28 +307,46 @@ JOIN pedidos ON pedidos.usuario_id = usuarios.id
 # Exemplo de Mapped em relacionamentos (1:N e N:N)
 
 ````
-from __future__ import annotations
 from typing import List
-from sqlalchemy import String, Integer, ForeignKey, Table
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import Column, String, Integer, ForeignKey, Table
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
+from pathlib import Path
+
+# Caminho da pasta para arquivo SQLite
+caminho= Path(__file__).parent
+# Nome da tabela
+nome_tabela = "cinema.sqlite"
+
+# ======================
+# ENDEREÇO DE CONEXÃO 
+# ====================== 
+# Criar o banco de dados e a tabela
+DATABASE_URL = f"sqlite:///{caminho / nome_tabela}"  # Usando SQLite como exemplo
+engine = create_engine(DATABASE_URL)
+
+# ======================
+# BANCO E SESSÃO
+# ======================
+Session = sessionmaker(bind=engine)
 
 # Base principal do ORM moderno
 class Base(DeclarativeBase):
     pass
 
-
 # ==========================
-# TABELA ASSOCIATIVA N:N
+# TABELA FILME_ATOR N:N (Tabela de Associação)
 # ==========================
-filme_ator = Table(
-    "filme_ator",
+# O nome da tabela deve corresponder ao usado no relacionamento (filmes_ator)
+# Usando 'Column' do SQLAlchemy para definir as colunas de uma tabela de associação simples.
+filmes_ator = Table(
+    "filmes_ator",
     Base.metadata,
-    # Colunas da tabela associativa
-    mapped_column("filme_id", ForeignKey("filmes.id"), primary_key=True),
-    mapped_column("ator_id", ForeignKey("atores.id"), primary_key=True),
+    Column("filme_id", ForeignKey("filmes.id"), primary_key=True),
+    Column("ator_id", ForeignKey("atores.id"), primary_key=True),
 )
-
 
 # ==========================
 # MODELO USUÁRIO (1:N)
@@ -307,7 +358,7 @@ class Usuario(Base):
     nome: Mapped[str] = mapped_column(String(80), nullable=False)
 
     # Um usuário pode ter vários filmes (1:N)
-    filmes: Mapped[List[Filme]] = relationship(back_populates="usuario")
+    filmes: Mapped[List["Filme"]] = relationship(back_populates="usuario") # Removido o argumento "Filme", pois é o padrão
 
     def __repr__(self) -> str:
         return f"<Usuario(nome={self.nome!r})>"
@@ -324,13 +375,15 @@ class Filme(Base):
     genero: Mapped[str] = mapped_column(String(50))
     ano: Mapped[int] = mapped_column(Integer)
 
-    # Relacionamento 1:N → com Usuario
+    # Relacionamento 1:N → com Usuario (Chave Estrangeira)
     usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
     usuario: Mapped[Usuario] = relationship(back_populates="filmes")
 
-    # Relacionamento N:N → com Atores
-    atores: Mapped[List[Ator]] = relationship(
-        secondary=filme_ator, back_populates="filmes"
+    # Relacionamento N:N → com Ator (CORRIGIDO)
+    # Usa a tabela 'filmes_ator' como 'secondary'
+    atores: Mapped[List["Ator"]] = relationship(
+        secondary=filmes_ator,  # Passa a variável Table definida acima
+        back_populates="filmes"
     )
 
     def __repr__(self) -> str:
@@ -347,16 +400,42 @@ class Ator(Base):
     nome: Mapped[str] = mapped_column(String(80), nullable=False)
 
     # Relacionamento N:N → com Filmes
-    filmes: Mapped[List[Filme]] = relationship(
-        secondary=filme_ator, back_populates="atores"
+    filmes: Mapped[List["Filme"]] = relationship(
+        secondary=filmes_ator,  # Usa a mesma variável Table
+        back_populates="atores"
     )
 
     def __repr__(self) -> str:
         return f"<Ator(nome={self.nome!r})>"
+    
+# ======================
+# CRIANDO AS TABELAS
+# ======================
+Base.metadata.create_all(engine)
 
+
+with Session() as session:
+    usuario = Usuario(nome="Décio")
+
+    filme1 = Filme(titulo="Gladiador", genero="Ação", ano=2000, usuario=usuario)
+    filme2 = Filme(titulo="Titanic", genero="Romance", ano=1997, usuario=usuario)
+
+    ator1 = Ator(nome="Russell Crowe")
+    ator2 = Ator(nome="Leonardo DiCaprio")
+
+    filme1.atores.append(ator1)
+    filme2.atores.append(ator2)
+
+    session.add_all([usuario, filme1, filme2, ator1, ator2])
+    session.commit()
+
+    # Exibe filmes e seus atores
+    for filme in session.query(Filme).all():
+        print(filme, "→ Atores:", filme.atores)
+    
 ````
 
-![alt text](<../Aula_14/Captura de tela 2025-10-23 174001.png>)
+![IMAGEM 05 RELACIONAMENTOS](IMAGENS/08_relacionamento.png)
 
 ### Relacionamentos em detalhes
 - 1:N → Usuario → Filme
@@ -379,34 +458,4 @@ ator2 = Ator(nome="Joaquin Phoenix")
 filme.atores.extend([ator1, ator2])
 ````
 
-### Exemplo de uso prático
-
-````
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-
-# Cria um banco SQLite em memória
-engine = create_engine("sqlite://", echo=True)
-Base.metadata.create_all(engine)
-
-with Session(engine) as session:
-    usuario = Usuario(nome="Décio")
-
-    filme1 = Filme(titulo="Gladiador", genero="Ação", ano=2000, usuario=usuario)
-    filme2 = Filme(titulo="Titanic", genero="Romance", ano=1997, usuario=usuario)
-
-    ator1 = Ator(nome="Russell Crowe")
-    ator2 = Ator(nome="Leonardo DiCaprio")
-
-    filme1.atores.append(ator1)
-    filme2.atores.append(ator2)
-
-    session.add(usuario)
-    session.commit()
-
-    # Consulta e exibe
-    for filme in session.query(Filme).all():
-        print(filme, "→ Atores:", filme.atores)
-````
-
-![alt text](<../Aula_14/Captura de tela 2025-10-23 175013.png>)
+![alt text](IMAGENS/09_Conclusão.png)

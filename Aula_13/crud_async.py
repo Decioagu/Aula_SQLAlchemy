@@ -19,8 +19,8 @@ class Picole(SQLModel, table=True):
 
 # Função para criar o banco e as tabelas
 async def criar_banco():
-    async with engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)
+    async with engine.begin() as conn: # abre a conexão
+        await conn.run_sync(SQLModel.metadata.create_all) # cria as tabelas
 
 # CRUD Operations
 async def criar_picole(nome: str, sabor: str):
@@ -64,6 +64,14 @@ async def deletar_picole(nome: str):
         else:
             print(f'Picolé "{nome}" não encontrado.')
 
+# READ
+async def listar_picole():
+    async with AsyncSession(engine) as session:
+        query = select(Picole)
+        result = await session.exec(query)
+        return result.all()
+
+
 async def main():
     # Criar banco de dados
     await criar_banco()
@@ -84,7 +92,17 @@ async def main():
 
     # Atualizar picolé
     await atualizar_picole("Limão", "Limão com Hortelã")
+    print(picole)
+
     await atualizar_picole("Chocolate", "Atualizado")
+    print(picole)
+
+    # Listar picolé
+    picole = await listar_picole()
+    print(picole)
+
+    for i, p in enumerate(picole):
+        print(f'Picole {i + 1} => {p}')
 
 if __name__ == '__main__':
     asyncio.run(main())
